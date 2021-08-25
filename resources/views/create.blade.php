@@ -4,11 +4,7 @@
 @endsection
 @section('content')
 
-{{--    @if($errors->any())--}}
-{{--    @foreach($errors->all() as $error)--}}
-{{--        <div class="m-2 w-50 m-auto"><p class="alert alert-danger">{{$error}}</p></div>--}}
-{{--    @endforeach--}}
-{{--    @endif--}}
+@include('layouts.errors')
     <form class="mb-5 w-50 m-auto" method="post" action="{{url('/books/store')}}" enctype="multipart/form-data">
         @csrf
         <div class="m-3">
@@ -44,3 +40,10 @@
     </form>
 
 @endsection
+
+
+@push('scripts')
+    <script>
+        // do the same for styles;
+    </script>
+@endpush

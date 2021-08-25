@@ -1,76 +1,103 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <!-- Required meta tags -->
+    <title>@yield('title')</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{asset('asset/css/style.css')}}">
-    <title>@yield('title')</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
+    {{-- put here stack for styles like scripts --}}
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        @if(\Illuminate\Support\Facades\Auth::user())
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            {{-- @if (\Illuminate\Support\Facades\Auth::user())
             <a class="navbar-brand" href="{{url('/books')}}">MyBookStore</a>
         @else
             <a class="navbar-brand" href="{{url('users/login')}}">MyBookStore</a>
-        @endif
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                @if(\Illuminate\Support\Facades\Auth::user())
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{url('/books')}}">All Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{url('users/notes')}}">My Notes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{url('users/logout')}}">Log out</a>
-                </li>
-                    @if(\Illuminate\Support\Facades\Auth::user()->is_admin==1)
+        @endif --}}
+
+            {{-- u can use auth directive and specify the needed guard instead of if else --}}
+
+            @auth('web')
+                <a class="navbar-brand" href="{{ url('/books') }}">MyBookStore</a>
+            @else
+                <a class="navbar-brand" href="{{ url('users/login') }}">MyBookStore</a>
+            @endauth
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {{-- u can leave it without ('guard_name') if it was web couse the default is web find it in config/auth.php --}}
+                    @auth
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{url('/books/create')}}">Create Book</a>
+                            <a class="nav-link active" aria-current="page" href="{{ url('/books') }}">All Books</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{url('/category/create')}}">Create Category</a>
+                            <a class="nav-link active" aria-current="page" href="{{ url('users/notes') }}">My
+                                Notes</a>
                         </li>
-                    @endif
-                @else
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{url('/users/login')}}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{url('/users/register')}}">Sign Up</a>
-                    </li>
-                @endif
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('users/logout') }}">Log
+                                out</a>
+                        </li>
+                        {{-- @if (\Illuminate\Support\Facades\Auth::user()->is_admin == 1) --}}
+                        @if (auth()->user()->is_admin == 1)
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{{ url('/books/create') }}">Create
+                                    Book</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{{ url('/category/create') }}">Create
+                                    Category</a>
+                            </li>
+                        @endif
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('/users/login') }}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('/users/register') }}">Sign
+                                Up</a>
+                        </li>
+                    @endauth
 
 
-            </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
     <div class="container">
         @yield('content')
     </div>
-<!-- Optional JavaScript; choose one of the two! -->
+    <!-- Optional JavaScript; choose one of the two! -->
+    {{-- if u need to custom your scripts in any child blade file just call @push('scripts') script here @endpush --}}
+    @stack('scripts')
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
 
-<!-- Option 1: Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-<!-- Option 2: Separate Popper and Bootstrap JS -->
-<!--
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 -->
 </body>
+
 </html>
